@@ -66,6 +66,8 @@ async def update_config(
     max_articles_per_fetch: int | None = None,
     use_google_news_fallback: bool | None = None,
     active: bool | None = None,
+    notification_email: str | None = None,
+    pin_duration_hours: int | None = None,
 ) -> dict:
     """Update news configuration. Only provided fields are updated.
 
@@ -77,6 +79,8 @@ async def update_config(
         max_articles_per_fetch: Max articles per fetch (1-30)
         use_google_news_fallback: Use Google News when no RSS sources configured
         active: Enable/disable news fetching
+        notification_email: Email address for article notifications (sent when new articles are fetched)
+        pin_duration_hours: How long a pinned (TOP) article stays on top, in hours (default 48)
     """
     data = {}
     if keywords is not None:
@@ -93,6 +97,10 @@ async def update_config(
         data["use_google_news_fallback"] = use_google_news_fallback
     if active is not None:
         data["active"] = active
+    if notification_email is not None:
+        data["notification_email"] = notification_email
+    if pin_duration_hours is not None:
+        data["pin_duration_hours"] = pin_duration_hours
     return await api_request("PATCH", "/config/", json_data=data)
 
 
@@ -221,6 +229,46 @@ async def reject_article(article_id: int) -> dict:
 
 
 @mcp.tool()
+async def pin_article(article_id: int) -> dict:
+    """Pin an article to the top of the list (TOP). Duration is configured in pin_duration_hours.
+
+    Args:
+        article_id: ID of the article to pin
+    """
+    return await api_request("POST", f"/articles/{article_id}/pin/")
+
+
+@mcp.tool()
+async def unpin_article(article_id: int) -> dict:
+    """Remove pin from an article (remove from TOP).
+
+    Args:
+        article_id: ID of the article to unpin
+    """
+    return await api_request("POST", f"/articles/{article_id}/unpin/")
+
+
+@mcp.tool()
+async def lock_article(article_id: int) -> dict:
+    """Lock an article to protect it from rotation cleanup (LOCK).
+
+    Args:
+        article_id: ID of the article to lock
+    """
+    return await api_request("POST", f"/articles/{article_id}/lock/")
+
+
+@mcp.tool()
+async def unlock_article(article_id: int) -> dict:
+    """Unlock an article, allowing it to be removed by rotation cleanup.
+
+    Args:
+        article_id: ID of the article to unlock
+    """
+    return await api_request("POST", f"/articles/{article_id}/unlock/")
+
+
+@mcp.tool()
 async def delete_article(article_id: int) -> str:
     """Delete an article.
 
@@ -229,6 +277,22 @@ async def delete_article(article_id: int) -> str:
     """
     await api_request("DELETE", f"/articles/{article_id}/")
     return f"Article {article_id} deleted"
+
+
+@mcp.tool()
+async def delete_all_articles() -> dict:
+    """Delete ALL articles for this project. Use with caution."""
+    data = await api_request("GET", "/articles/", params={"page_size": 200})
+    results = data.get("results", [])
+    deleted = 0
+    errors = 0
+    for article in results:
+        try:
+            await api_request("DELETE", f"/articles/{article['id']}/")
+            deleted += 1
+        except Exception:
+            errors += 1
+    return {"deleted": deleted, "errors": errors, "total_found": len(results)}
 
 
 # ===== Fetch & Stats =====
