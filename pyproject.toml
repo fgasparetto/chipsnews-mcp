@@ -1,0 +1,35 @@
+[project]
+name = "chipsnews-mcp"
+version = "1.0.0"
+description = "MCP server for ChipsNews — manage news sources, articles, and fetch triggers from any MCP client"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Francesco Gasparetto", email = "fgasparetto@gmail.com" }]
+readme = "README.md"
+keywords = ["mcp", "model-context-protocol", "news", "rss", "chipsnews"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+    "mcp[cli]>=1.0.0",
+    "httpx>=0.27.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/fgasparetto/chipsnews-mcp"
+Repository = "https://github.com/fgasparetto/chipsnews-mcp"
+Issues = "https://github.com/fgasparetto/chipsnews-mcp/issues"
+
+[project.scripts]
+chipsnews-mcp = "server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+include = ["server.py"]

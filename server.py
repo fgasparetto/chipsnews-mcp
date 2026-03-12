@@ -355,5 +355,10 @@ async def update_notification_settings(
 
 
 # --- Run ---
+def main():
+    """Run the MCP server."""
+    mcp.run()
+
+
 if __name__ == "__main__":
     mcp.run()
