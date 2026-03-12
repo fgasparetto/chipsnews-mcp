@@ -269,6 +269,16 @@ async def unlock_article(article_id: int) -> dict:
 
 
 @mcp.tool()
+async def restore_article(article_id: int) -> dict:
+    """Restore a rejected article back to draft status.
+
+    Args:
+        article_id: ID of the rejected article to restore
+    """
+    return await api_request("POST", f"/articles/{article_id}/restore/")
+
+
+@mcp.tool()
 async def delete_article(article_id: int) -> str:
     """Delete an article.
 
@@ -307,6 +317,41 @@ async def trigger_fetch() -> dict:
 async def get_stats() -> dict:
     """Get usage statistics: article counts, API calls, fetch history."""
     return await api_request("GET", "/stats/")
+
+
+# ===== Notification Settings =====
+
+@mcp.tool()
+async def get_notification_settings() -> dict:
+    """Get notification settings: enabled, email, new articles alert, weekly digest."""
+    return await api_request("GET", "/notifications/")
+
+
+@mcp.tool()
+async def update_notification_settings(
+    notifications_enabled: bool | None = None,
+    notification_email: str | None = None,
+    notify_on_new_articles: bool | None = None,
+    notify_weekly_digest: bool | None = None,
+) -> dict:
+    """Update notification settings.
+
+    Args:
+        notifications_enabled: Master switch for all notifications
+        notification_email: Override email (blank = use account email)
+        notify_on_new_articles: Send email when new articles are fetched
+        notify_weekly_digest: Send weekly digest email (every Monday at 8am)
+    """
+    data = {}
+    if notifications_enabled is not None:
+        data["notifications_enabled"] = notifications_enabled
+    if notification_email is not None:
+        data["notification_email"] = notification_email
+    if notify_on_new_articles is not None:
+        data["notify_on_new_articles"] = notify_on_new_articles
+    if notify_weekly_digest is not None:
+        data["notify_weekly_digest"] = notify_weekly_digest
+    return await api_request("PATCH", "/notifications/", json_data=data)
 
 
 # --- Run ---
