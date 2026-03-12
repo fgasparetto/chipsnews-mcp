@@ -1,6 +1,6 @@
 [project]
 name = "chipsnews-mcp"
-version = "1.0.0"
+version = "1.0.1"
 description = "MCP server for ChipsNews — manage news sources, articles, and fetch triggers from any MCP client"
 requires-python = ">=3.11"
 license = "MIT"
