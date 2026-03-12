@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/modelcontextprotocol/registry/refs/heads/main/schema/server.schema.json",
+  "name": "io.github.fgasparetto/chipsnews-mcp",
+  "title": "ChipsNews MCP Server",
+  "description": "MCP server for ChipsNews — manage news sources, articles, and fetch triggers from any MCP client",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/fgasparetto/chipsnews-mcp",
+    "source": "github"
+  },
+  "packages": [{
+    "registryType": "pypi",
+    "identifier": "chipsnews-mcp",
+    "version": "1.0.0",
+    "transport": { "type": "stdio" },
+    "environmentVariables": [
+      {
+        "name": "CHIPSNEWS_API_KEY",
+        "description": "ChipsNews API key (Bearer token)",
+        "isRequired": true,
+        "isSecret": true
+      },
+      {
+        "name": "CHIPSNEWS_API_URL",
+        "description": "ChipsNews API base URL",
+        "default": "https://news.chipsbuilder.com",
+        "isRequired": false,
+        "isSecret": false
+      }
+    ]
+  }]
+}

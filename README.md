@@ -1,3 +1,5 @@
+<!-- mcp-name: io.github.fgasparetto/chipsnews-mcp -->
+
 # ChipsNews MCP Server
 
 MCP (Model Context Protocol) server for [ChipsNews](https://news.chipsbuilder.com) — manage news configuration, sources, articles, and fetch triggers from Claude Code, Claude Desktop, or any MCP client.
