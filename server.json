@@ -1,8 +1,8 @@
 {
-  "$schema": "https://raw.githubusercontent.com/modelcontextprotocol/registry/refs/heads/main/schema/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.fgasparetto/chipsnews-mcp",
   "title": "ChipsNews MCP Server",
-  "description": "MCP server for ChipsNews — manage news sources, articles, and fetch triggers from any MCP client",
+  "description": "MCP server for ChipsNews — manage news sources, articles, and triggers",
   "version": "1.0.1",
   "repository": {
     "url": "https://github.com/fgasparetto/chipsnews-mcp",
