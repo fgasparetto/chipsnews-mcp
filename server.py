@@ -16,7 +16,7 @@ import httpx
 from mcp.server.fastmcp import FastMCP
 
 # --- Config from env ---
-API_URL = os.environ.get("CHIPSNEWS_API_URL", "https://news.chipsbuilder.com").rstrip("/")
+API_URL = os.environ.get("CHIPSNEWS_API_URL", "https://content.chipsbuilder.com").rstrip("/")
 API_KEY = os.environ.get("CHIPSNEWS_API_KEY", "")
 
 mcp = FastMCP(
@@ -68,6 +68,7 @@ async def update_config(
     active: bool | None = None,
     notification_email: str | None = None,
     pin_duration_hours: int | None = None,
+    max_articles: int | None = None,
 ) -> dict:
     """Update news configuration. Only provided fields are updated.
 
@@ -81,6 +82,7 @@ async def update_config(
         active: Enable/disable news fetching
         notification_email: Email address for article notifications (sent when new articles are fetched)
         pin_duration_hours: How long a pinned (TOP) article stays on top, in hours (default 48)
+        max_articles: Maximum articles to keep per project (1-300, default 200). Oldest non-locked articles are automatically removed beyond this limit.
     """
     data = {}
     if keywords is not None:
@@ -101,6 +103,8 @@ async def update_config(
         data["notification_email"] = notification_email
     if pin_duration_hours is not None:
         data["pin_duration_hours"] = pin_duration_hours
+    if max_articles is not None:
+        data["max_articles"] = max(1, min(300, max_articles))
     return await api_request("PATCH", "/config/", json_data=data)
 
 
